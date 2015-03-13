@@ -7,6 +7,7 @@
 	Tasks:
 	- Implement Dijkstra's shunting-yard algorithm to support operators of any precedence and associativity. 
 	- Extend the algorithm for operators with 3 or more operands (e. g., if-then-else).
+	- Transform a RPN (Reverse Polish notation) expression into an AST (abstract syntax tree).
 */
 
 
@@ -19,6 +20,7 @@
 	3.) Dijkstra's shunting-yard algorithm
 	4.) Parsing infix and transform it to postfix
 	5.) Evaluating arithmetic expressions in Reverse Polish notation
+	6.) Transform a RPN (Reverse Polish notation) expression into an AST (abstract syntax tree)
 */
 
 
@@ -26,6 +28,8 @@
 /*
 	0.) Introduction:
 */
+
+
 
 /*
 	The way we write arithmetic expressions is infix notation.
@@ -87,6 +91,8 @@ object ShuntingYard {
 	1.) Structures used in the program:
 	*/
 
+
+
 	/*
 	An arithmetic expression consists of tokens. A token could be a number, a binary operator, a bracket
 	or other elements of the expression. 9 + 24 / ( 7 - 3 ) has four number tokens, three binary operator tokens
@@ -141,6 +147,8 @@ object ShuntingYard {
 	2.) Tokenizing an input string:
 	*/
 		
+
+
 	/*
 	Given a string, we want to know whether it's a number or not.
 	*/	
@@ -223,6 +231,8 @@ object ShuntingYard {
   /*
   3.) Dijkstra's shunting-yard algorithm:
 	*/
+
+
 
   /*
   Given two operator strings, we want to test whether
@@ -397,6 +407,8 @@ object ShuntingYard {
   4.) Parsing infix and transform it to postfix:
 	*/
 
+
+
 	/*
 	Given an infix arithmetic expression string, we want to transform it to RPN (Reverse Polish notation).
 	We tokenize the string, and then call the shunting-yard algorithm on it.
@@ -410,8 +422,10 @@ object ShuntingYard {
 
 
 	/*
-	5.) Evaluating arithmetic expressions in Reverse Polish notation
+	5.) Evaluating arithmetic expressions in Reverse Polish notation:
 	*/
+
+
 
 	/*
 	Given a token that should be Num(number), number is returned.
@@ -530,8 +544,81 @@ object ShuntingYard {
   	getInt(stack.head)
   }
   
-}//end
 
+
+  /*
+  6.) Transform a RPN (Reverse Polish notation) expression into an AST (abstract syntax tree):
+  */
+
+
+  /*
+	We can easily transform the output of the shunting-yard algorithm into an abstract syntax tree.
+	Let's create a simplified version of the tree structure in SimpleGrammar.scala:
+	The leafs contain an integer value, and the branches contain the operator as a string and
+	the children as a list of trees.
+  */
+  sealed trait Tree
+  case class Leaf(number: Int) extends Tree
+  case class Branch(operator: String, children: List[Tree]) extends Tree 
+
+  //a stack of trees is needed to save the children for the next operators
+  var stackOfTrees = List[Tree] ()
+
+  /*
+	Building a tree from a RPN expression is similar to evaluating it.
+	If we encounter a number, we build the leaf and push it onto the stackOfTrees.
+	If we encounter an operator, we build a branch and use the correspondent items on the stackOfTrees
+	as it's children. Then we push the branch onto the stackOfTrees, so it can be used as a child
+	for the next operation. If there are no elements to read, the remaining element on the stackOfTrees
+	is our tree.
+
+	Prints error message on failure.
+
+	Should return a tree.
+  */
+  def createTree(input: Queue[Token]): Tree = input.dequeue match {
+  	case Num(number) => {
+  		stackOfTrees = Leaf(number) +: stackOfTrees   		
+  		if(input.isEmpty == false)
+  			createTree(input)
+  		else
+  			stackOfTrees.head
+  	}  
+  	case Operator(operator) => {
+  		var second = stackOfTrees.head
+  		stackOfTrees = stackOfTrees.drop(1)
+  		var first = stackOfTrees.head
+  		stackOfTrees = stackOfTrees.drop(1)
+  		stackOfTrees = Branch(operator, List(first, second)) +: stackOfTrees
+  		if(input.isEmpty == false)
+  			createTree(input)
+  		else
+  			stackOfTrees.head		
+  	} 
+  	case NAryOperator(keyword, position, last) => {
+  		var third = stackOfTrees.head
+  		stackOfTrees = stackOfTrees.drop(1)
+  		var second = stackOfTrees.head
+  		stackOfTrees = stackOfTrees.drop(1)
+  		var first = stackOfTrees.head
+  		stackOfTrees = stackOfTrees.drop(1)
+  		stackOfTrees = Branch(keyword, List(first, second, third)) +: stackOfTrees
+  		if(input.isEmpty == false)
+  			createTree(input)
+  		else
+  			stackOfTrees.head		
+  	}   
+  	case _ => {
+  		print("Something went wrong.")
+  		sys.exit()
+  	}	
+  }
+
+  def helper(input: String): Tree = createTree(parse(input))
+
+
+
+}//end
 
 
 

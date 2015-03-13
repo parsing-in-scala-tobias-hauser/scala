@@ -71,7 +71,15 @@ class ShuntingYardSpec extends FlatSpec {
     assert(eval(test24) == 0)
   }//end
   
+  "createTree" should "create a tree from a given RPN" in {
+    val test0 = parse("1234") 
+    val test1 = parse("2 + 3")
+    val test2 = parse("5 - 2 - 1")
+    val test3 = parse("if 2 == 3 then 1 else 0")
+
+    assert(createTree(test0) == Leaf(1234))
+    assert(createTree(test1) == Branch("+", List(Leaf(2), Leaf(3))))
+    assert(createTree(test2) == Branch("-", List(Branch("-", List(Leaf(5), Leaf(2))), Leaf(1))))
+    assert(createTree(test3) == Branch("if", List(Branch("==", List(Leaf(2), Leaf(3))), Leaf(1), Leaf(0))))
+  }//end
 }//eof
-
-
-
