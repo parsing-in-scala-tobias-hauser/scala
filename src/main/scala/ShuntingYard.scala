@@ -21,6 +21,7 @@
 	4.) Parsing infix and transform it to postfix
 	5.) Evaluating arithmetic expressions in Reverse Polish notation
 	6.) Transform a RPN (Reverse Polish notation) expression into an AST (abstract syntax tree)
+	7.) List of references
 */
 
 
@@ -70,10 +71,6 @@
 					 e.g. operators on an operator stack
 	- queue: opposite to a stack, FIFO data structure, used to store an RPN expression,
 					 e.g. the output of the shunting-yard algorithm or the input of a RPN evaluator.
-
-	List of references: 
-	- http://en.wikipedia.org/wiki/Shunting-yard_algorithm
-	- https://www.youtube.com/watch?v=QzVVjboyb0s
 */
 
 
@@ -105,7 +102,8 @@ object ShuntingYard {
 		- more complex tokens for n-ary operators like "if-then-else".
 		- contain the keyword, e.g. "if", "then" or "else".
 		- contain the position, e.g. "if" would be on position 0, and "then" on position 1.
-		- the token also tells us whether it is the last position or not, e.g. "else" is the last keyword of the "if-then-else" expression.
+		- the token also tells us whether it is the last position or not, e.g. "else" is 
+			the last keyword of the "if-then-else" expression.
 	*/
 	sealed trait Token 
 		case class Num(number: Int) extends Token
@@ -163,7 +161,8 @@ object ShuntingYard {
 	for "(", return Bracket("("), and
 	for "+", return Operator("+").
 
-	If there is an operator we don't know, e.g. "IAmAStrangeNewOperator" let's print a suitable error message and exit the program.
+	If there is an operator we don't know, e.g. "IAmAStrangeNewOperator" let's print a 
+	suitable error message and exit the program.
 
 	Should return the created token on success.
 	*/ 
@@ -190,8 +189,8 @@ object ShuntingYard {
 
   /*
 	Given an input string, we create an array of strings by separating the input string by spaces.
-	With this array of strings, we want to create an array of tokens, by calling the `createToken` function on
-	each string of the array. 
+	With this array of strings, we want to create an array of tokens, by calling the `createToken` function
+	on each string of the array. 
 
 	If there is a number following a number, or an operator following an operator, let's print a 
 	suitable error message and exit the program.
@@ -343,7 +342,8 @@ object ShuntingYard {
   		tokenArray(i) match {
   			case Num(number) => output.enqueue(Num(number))
   			case Operator(operator) => {
-  				while(stack.isEmpty == false && operatorList.contains(getString(stack.head)) && checkPrecedence(operator, getString(stack.head))) {
+  				while(stack.isEmpty == false 	&& operatorList.contains(getString(stack.head)) 
+  																			&& checkPrecedence(operator, getString(stack.head))) {
   					output.enqueue(stack.head)
   					stack = stack.drop(1)
   				}
@@ -392,7 +392,7 @@ object ShuntingYard {
   			}  			
   		}
   	}
-  	if(positionStack.isEmpty) { //all n-ary operators should be closed, and the rest of the operator stack is added to the output queue
+  	if(positionStack.isEmpty) { //all n-ary operators should be closed, and the rest of the operator stack is added to the output
   		output ++= stack 
   	}
   	else {
@@ -427,29 +427,18 @@ object ShuntingYard {
 
 
 
-	/*
-	Given a token that should be Num(number), number is returned.
-
-	Prints an error message on failure.
-	
-	Should return an integer.
-  */
-  def getInt(token: Token): Int = {
-  	token match {
-  		case Num(number) => number
-  		case _ => {
-  			println("getInt() did not work.")   										
-  			sys.exit()
-  		}
-  	}
-  }
-
   /*
 	In order to evaluate an expression in postfix notation, we need 
-	a stack for the number-tokens and a function which evaluates all operations 
+	a stack for the numbers and a function which evaluates all operations 
 	on the stack.
+	*/
 
+	//a stack of numbers is needed, so we can do operations on the stack
+  var stackOfNumbers = List[Int] ()
+
+  /*
   The following algorithm evaluates Reverse Polish notation (= postfix notation):
+
   while there are input tokens left:  
 	- read the next token from input.
 	- if the token is a number, we push it to the stack.
@@ -465,90 +454,86 @@ object ShuntingYard {
 
 	Should return the result as an integer value.
   */
-  def eval(input: Queue[Token]): Int = {
-  	//we need a stack for the number-tokens, so we can do operations on the stack
-  	var stack = List[Token] ()
+  def eval(input: Queue[Token]): Int = input.isEmpty match {
+  	case true => stackOfNumbers.isEmpty match {
+  		case true => {
+  			println("The evaluator failed.")   										
+  			sys.exit()
+  		}
+  		case false => stackOfNumbers.head
+  	}
+  	case false => input.dequeue match {
+  		case Num(number) => {
+  			stackOfNumbers = number +: stackOfNumbers 
+  			eval(input)
+  		}
+  		case Operator(operator) => {
+  			//pop first and second element from the stack
+  			var second = stackOfNumbers.head
+  			stackOfNumbers = stackOfNumbers.drop(1)
+  			var first = stackOfNumbers.head
+  			stackOfNumbers = stackOfNumbers.drop(1)
 
-  	while(input.isEmpty == false) {
-  		input.dequeue match {
-  			case Num(number) => stack = Num(number) +: stack 
-  			case Operator(operator) => operator match {
-  				case "+" => {
-  					var secondOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					var firstOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					stack = Num(firstOperand + secondOperand) +: stack
+  			operator match {
+  				case "+" => {  					
+  					stackOfNumbers = (first + second) +: stackOfNumbers  					
   				}
-  				case "-" => {
-  					var secondOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					var firstOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					stack = Num(firstOperand - secondOperand) +: stack
+  				case "-" => {  					
+  					stackOfNumbers = (first - second) +: stackOfNumbers  					
   				}
-  				case "*" => {
-  					var secondOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					var firstOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					stack = Num(firstOperand * secondOperand) +: stack
+  				case "*" => {  					
+  					stackOfNumbers = (first * second) +: stackOfNumbers  					
   				}
-  				case "/" => {
-  					var secondOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					var firstOperand = getInt(stack.head)
-  					stack = stack.drop(1)
-  					stack = Num(firstOperand / secondOperand) +: stack
+  				case "/" => {  					
+  					stackOfNumbers = (first / second) +: stackOfNumbers  					
   				}
-          case "^" => {
-            var secondOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            var firstOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            stack = Num(pow(firstOperand , secondOperand).toInt) +: stack
+        	case "^" => {        	  
+        	  stackOfNumbers = pow(first , second).toInt +: stackOfNumbers        	  
+        	}
+        	case "==" => {        	  
+        	  if(first == second)            
+        	  	stackOfNumbers = 1 +: stackOfNumbers
+        	  else
+        	  	stackOfNumbers = 0 +: stackOfNumbers
+        	}
+        	case _ => {
+  					println("Operator " + operator + " is not supported.")   										
+  					sys.exit()
+  				}          	           
+  			}
+
+  			eval(input) 			
+  		}
+  		case NAryOperator(keyword, position, last) => keyword match {
+  			case "if" => {
+          var third = stackOfNumbers.head
+          stackOfNumbers = stackOfNumbers.drop(1)
+          var second = stackOfNumbers.head
+          stackOfNumbers = stackOfNumbers.drop(1)
+          var first = stackOfNumbers.head
+          stackOfNumbers = stackOfNumbers.drop(1)
+          if (first != 0) {            	
+            stackOfNumbers = second +: stackOfNumbers
           }
-          case "==" => {
-            var secondOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            var firstOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            if(firstOperand == secondOperand)            
-            	stack = Num(1) +: stack
-            else
-            	stack = Num(0) +: stack
-          }            
-  			}
-  			case NAryOperator(keyword, position, last) => keyword match {
-  				case "if" => {
-          	var thirdOperand = getInt(stack.head)
-            stack = stack.drop(1)
-          	var secondOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            var firstOperand = getInt(stack.head)
-            stack = stack.drop(1)
-            if (firstOperand != 0) {            	
-            	stack = Num(secondOperand) +: stack
-            }
-            else {            	
-            	stack = Num(thirdOperand) +: stack
-            }
+          else {            	
+            stackOfNumbers = third +: stackOfNumbers
           }
-  			}
-  			case _ => {
-  				println("Something could not be evaluated.")   										
-  				sys.exit()
-  			}
+          eval(input)
+        }
+  		}
+  		case _ => {
+  			println("Something could not be evaluated.")   										
+  			sys.exit()
   		}
   	}
-  	getInt(stack.head)
-  }
-  
+  }  	
+  	  
 
 
   /*
   6.) Transform a RPN (Reverse Polish notation) expression into an AST (abstract syntax tree):
   */
+
 
 
   /*
@@ -566,62 +551,67 @@ object ShuntingYard {
 
   /*
 	Building a tree from a RPN expression is similar to evaluating it.
-	If we encounter a number, we build the leaf and push it onto the stackOfTrees.
-	If we encounter an operator, we build a branch and use the correspondent items on the stackOfTrees
-	as it's children. Then we push the branch onto the stackOfTrees, so it can be used as a child
-	for the next operation. If there are no elements to read, the remaining element on the stackOfTrees
+	If we encounter a number, we build the leaf and push it onto the stack of trees.
+	If we encounter an operator, we build a branch and use the correspondent items on the stack of trees
+	as it's children. Then we push the branch onto the stack of trees, so it can be used as a child
+	for the next operation. If there are no elements to read, the remaining element on the stack of trees
 	is our tree.
 
 	Prints error message on failure.
 
 	Should return a tree.
   */
-  def createTree(input: Queue[Token]): Tree = input.dequeue match {
-  	case Num(number) => {
-  		stackOfTrees = Leaf(number) +: stackOfTrees   		
-  		if(input.isEmpty == false)
-  			createTree(input)
-  		else
+  def createTree(input: Queue[Token]): Tree = input.isEmpty match {
+  	case true => stackOfTrees.isEmpty match {
+  		case true => {
+  			println("The creation of the tree failed.")   										
+  			sys.exit()
+  		}
+  		case false => {
   			stackOfTrees.head
-  	}  
-  	case Operator(operator) => {
-  		var second = stackOfTrees.head
-  		stackOfTrees = stackOfTrees.drop(1)
-  		var first = stackOfTrees.head
-  		stackOfTrees = stackOfTrees.drop(1)
-  		stackOfTrees = Branch(operator, List(first, second)) +: stackOfTrees
-  		if(input.isEmpty == false)
-  			createTree(input)
-  		else
-  			stackOfTrees.head		
-  	} 
-  	case NAryOperator(keyword, position, last) => {
-  		var third = stackOfTrees.head
-  		stackOfTrees = stackOfTrees.drop(1)
-  		var second = stackOfTrees.head
-  		stackOfTrees = stackOfTrees.drop(1)
-  		var first = stackOfTrees.head
-  		stackOfTrees = stackOfTrees.drop(1)
-  		stackOfTrees = Branch(keyword, List(first, second, third)) +: stackOfTrees
-  		if(input.isEmpty == false)
-  			createTree(input)
-  		else
-  			stackOfTrees.head		
-  	}   
-  	case _ => {
-  		print("Something went wrong.")
-  		sys.exit()
+  		} 
+  	}
+  	case false => input.dequeue match {
+  		case Num(number) => {
+  			stackOfTrees = Leaf(number) +: stackOfTrees 
+  			createTree(input)  		  			
+  		}  
+  		case Operator(operator) => {
+  			var second = stackOfTrees.head
+  			stackOfTrees = stackOfTrees.drop(1)
+  			var first = stackOfTrees.head
+  			stackOfTrees = stackOfTrees.drop(1)
+  			stackOfTrees = Branch(operator, List(first, second)) +: stackOfTrees  
+  			createTree(input)			
+  		} 
+  		case NAryOperator(keyword, position, last) => {
+  			var third = stackOfTrees.head
+  			stackOfTrees = stackOfTrees.drop(1)
+  			var second = stackOfTrees.head
+  			stackOfTrees = stackOfTrees.drop(1)
+  			var first = stackOfTrees.head
+  			stackOfTrees = stackOfTrees.drop(1)
+  			stackOfTrees = Branch(keyword, List(first, second, third)) +: stackOfTrees
+  			createTree(input)  					
+  		}   
+  		case _ => {
+  			print("Something went wrong.")
+  			sys.exit()
+  		}
   	}	
   }
 
-  def helper(input: String): Tree = createTree(parse(input))
 
 
+  /*
+  7.) List of references
+	*/
 
+
+	/*
+	The following references were helpful to implement the final project: 
+	- http://stackoverflow.com/questions/19895308/converting-from-reverse-polish-notationrpn-into-a-tree-form
+	- http://en.wikipedia.org/wiki/Shunting-yard_algorithm
+	- https://www.youtube.com/watch?v=QzVVjboyb0s
+	*/
 }//end
-
-
-
-
-
-
