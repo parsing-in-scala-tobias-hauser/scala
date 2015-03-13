@@ -1,0 +1,8 @@
+[0m[[0minfo[0m] [0m[32mNaiveGrammarSpec:[0m[0m
+[0m[[0minfo[0m] [0m[32mae[0m[0m
+[0m[[0minfo[0m] [0m[32m- should parse arithmetic expressions[0m[0m
+[0m[[0minfo[0m] [0m[32m- should parse and simplify arithmetic expressions[0m[0m
+[0m[[0minfo[0m] [0m[32mparseNonterminal[0m[0m
+[0m[[0minfo[0m] [0m[32m- should produce a parser for the given nonterminal[0m[0m
+[0m[[0minfo[0m] [0m[32mparseRHS[0m[0m
+[0m[[0minfo[0m] [0m[32m- should create a List of syntax tree nodes for all parts mentioned in the right hand side of a production rule[0m[0m

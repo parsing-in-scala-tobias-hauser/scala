@@ -1,0 +1,15 @@
+[0m[[0minfo[0m] [0m[32mCombinatorsSpec:[0m[0m
+[0m[[0minfo[0m] [0m[32mThe `choice` combinator[0m[0m
+[0m[[0minfo[0m] [0m[32m- should work for `parseExp3`[0m[0m
+[0m[[0minfo[0m] [0m[32mThe `sequence` combinator[0m[0m
+[0m[[0minfo[0m] [0m[32m- should work for `parseMul3`[0m[0m
+[0m[[0minfo[0m] [0m[32mThe `postprocess` combinator[0m[0m
+[0m[[0minfo[0m] [0m[32m- should work for `parseMul4`[0m[0m
+[0m[[0minfo[0m] [0m[32mOne[0m[0m
+[0m[[0minfo[0m] [0m[32m- should be able to implement the AE parser with combinators[0m[0m
+[0m[[0minfo[0m] [0m[32mThe `zeroOrMore` combinator[0m[0m
+[0m[[0minfo[0m] [0m[32m- should build parsers of lists[0m[0m
+[0m[[0minfo[0m] [0m[32mThe `oneOrMore` combinator[0m[0m
+[0m[[0minfo[0m] [0m[32m- should build parsers of nonempty lists[0m[0m
+[0m[[0minfo[0m] [0m[32m`parse3`[0m[0m
+[0m[[0minfo[0m] [0m[32m- should parse expressions with spaces between words[0m[0m

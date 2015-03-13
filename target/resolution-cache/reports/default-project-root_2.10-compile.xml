@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="default"
+		module="project-root_2.10"
+		revision="0.1-SNAPSHOT"
+		conf="compile"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20141210212357"/>
+	<dependencies>
+		<module organisation="com.github.nikita-volkov" name="sext">
+			<revision name="0.2.3" status="release" pubdate="20121223135024" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.github.com/nikita-volkov/sext" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master" position="1">
+				<license name="MIT/X11" url="http://www.github.com/nikita-volkov/sext/LICENSE"/>
+				<metadata-artifact status="no" details="" size="3641" time="0" location="/home/tobi/.ivy2/cache/com.github.nikita-volkov/sext/ivy-0.2.3.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/com/github/nikita-volkov/sext/0.2.3/sext-0.2.3.pom"/>
+				<caller organisation="default" name="project-root_2.10" conf="compile" rev="0.2.3" rev-constraint-default="0.2.3" rev-constraint-dynamic="0.2.3" callerrev="0.1-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="sext" type="jar" ext="jar" status="no" details="" size="84588" time="0" location="/home/tobi/.ivy2/cache/com.github.nikita-volkov/sext/jars/sext-0.2.3.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/com/github/nikita-volkov/sext/0.2.3/sext-0.2.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-compiler">
+			<revision name="2.10.0" status="release" pubdate="20121220082948" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="3">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html    "/>
+				<metadata-artifact status="no" details="" size="2809" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-compiler/ivy-2.10.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.10.0/scala-compiler-2.10.0.pom"/>
+				<caller organisation="com.github.nikita-volkov" name="sext" conf="default, compile, runtime, master" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="0.2.3"/>
+				<artifacts>
+					<artifact name="scala-compiler" type="jar" ext="jar" status="no" details="" size="14149435" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.10.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.10.0/scala-compiler-2.10.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-reflect">
+			<revision name="2.10.0" status="release" pubdate="20121220082932" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" downloaded="false" searched="false" default="false" conf="compile, master(*), runtime, compile(*), runtime(*), master" position="2">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html    "/>
+				<metadata-artifact status="no" details="" size="2552" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-reflect/ivy-2.10.0.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.10.0/scala-reflect-2.10.0.pom"/>
+				<caller organisation="com.github.nikita-volkov" name="sext" conf="default, compile, runtime, master" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="0.2.3"/>
+				<caller organisation="org.scala-lang" name="scala-compiler" conf="compile, runtime" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="2.10.0"/>
+				<artifacts>
+					<artifact name="scala-reflect" type="jar" ext="jar" status="no" details="" size="3149351" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.0.jar">
+						<origin-location is-local="false" location="https://repo1.maven.org/maven2/org/scala-lang/scala-reflect/2.10.0/scala-reflect-2.10.0.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.10.4" status="release" pubdate="20140318224629" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.10.4/" downloaded="false" searched="false" default="false" conf="default(compile), default, compile, runtime, master, master(*), compile(*), runtime(*)" position="0">
+				<license name="BSD-like" url="http://www.scala-lang.org/downloads/license.html          "/>
+				<metadata-artifact status="no" details="" size="2487" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-library/ivy-2.10.4.xml" searched="false" origin-is-local="false" origin-location="https://repo1.maven.org/maven2/org/scala-lang/scala-library/2.10.4/scala-library-2.10.4.pom"/>
+				<caller organisation="org.scala-lang" name="scala-reflect" conf="compile, runtime" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="2.10.0"/>
+				<caller organisation="com.github.nikita-volkov" name="sext" conf="default, compile, runtime, master" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="0.2.3"/>
+				<caller organisation="org.scala-lang" name="scala-compiler" conf="compile, runtime" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="2.10.0"/>
+				<caller organisation="default" name="project-root_2.10" conf="compile" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="0.1-SNAPSHOT"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="7126372" time="0" location="/home/tobi/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.10.4.jar">
+						<origin-location is-local="false" location="UNKNOWN"/>
+					</artifact>
+				</artifacts>
+			</revision>
+			<revision name="2.10.0" evicted="latest-revision" evicted-reason="" downloaded="false" searched="false" conf="compile, master(*), runtime, compile(*), runtime(*), master, default(compile), default" position="-1">
+				<evicted-by rev="2.10.4"/>
+				<caller organisation="org.scala-lang" name="scala-reflect" conf="compile, runtime" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="2.10.0"/>
+				<caller organisation="com.github.nikita-volkov" name="sext" conf="default, compile, runtime, master" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="0.2.3"/>
+				<caller organisation="org.scala-lang" name="scala-compiler" conf="compile, runtime" rev="2.10.0" rev-constraint-default="2.10.0" rev-constraint-dynamic="2.10.0" callerrev="2.10.0"/>
+				<caller organisation="default" name="project-root_2.10" conf="compile" rev="2.10.4" rev-constraint-default="2.10.4" rev-constraint-dynamic="2.10.4" callerrev="0.1-SNAPSHOT"/>
+				<artifacts>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
